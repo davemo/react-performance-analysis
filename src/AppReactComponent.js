@@ -2,23 +2,28 @@ import React, { Component } from 'react';
 import './App.css';
 import response from './data-1000.json';
 import _ from 'lodash';
-import { pure } from 'recompose';
 
-const Cell = pure(({ output }) => {
-  return (
-    <td>{output}</td>
-  )
-})
+class Cell extends Component {
+  render() {
+    const { output } = this.props;
+    return (
+      <td>{output}</td>
+    )
+  }
+}
 
-const Row = pure(({ row, cols }) => {
-  return (
-    <tr>
-      {cols.map(col =>
-        <Cell key={`${row.id}-${col}`} output={_.get(row, col)} />
-      )}
-    </tr>
-  )
-})
+class Row extends Component {
+  render() {
+    const { row, cols } = this.props;
+    return (
+      <tr>
+        {cols.map(col =>
+          <Cell key={`${row.id}-${col}`} output={_.get(row, col)} />
+        )}
+      </tr>
+    )
+  }
+}
 
 class Table extends Component {
   state = {
@@ -27,7 +32,7 @@ class Table extends Component {
     sortedData: [],
   }
 
-  doSort = (col, sortOrder) => () => {
+  doSort = (col) => () => {
     const newSortOrder =
       (this.state.sortOrder === '' || this.state.sortOrder === 'desc')
       ? 'asc'
@@ -50,7 +55,7 @@ class Table extends Component {
 
   render() {
     const { data, cols } = this.props;
-    const { sortBy, sortOrder, sortedData } = this.state;
+    const { sortBy, sortedData } = this.state;
 
     return (
       <table>
@@ -68,7 +73,7 @@ class Table extends Component {
         <thead>
           <tr>
             {cols.map(col =>
-              <th key={col} onClick={this.doSort(col, sortOrder)}>
+              <th key={col} onClick={this.doSort(col)}>
                 {col}
               </th>,
             )}
