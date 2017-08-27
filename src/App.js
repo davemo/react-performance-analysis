@@ -1,29 +1,45 @@
 import React from 'react';
 import './App.css';
+import response from './data.json';
+import _ from 'lodash';
 
-const Table = ({ data, cols }) => (
+const Table = ({ data, cols }) =>
   <table>
     <thead>
-      {cols.map(c => (
-        <tr key={c.header}>
-          <th>{c.header}</th>
-        </tr>
-      ))}
+      <tr>
+        {cols.map(col =>
+          <th key={col}>
+            {col}
+          </th>,
+        )}
+      </tr>
     </thead>
     <tbody>
-      {data.map(r => (
-        <tr key={r.id}>
-        {cols.map((c, i) => (
-          <td key={`${r}-${c}${i}`}>{c}</td>
-        ))}
-        </tr>
-      ))}
+      {data.map(row =>
+        <tr key={row.id}>
+          {cols.map((col) =>
+            <td key={`${row.id}-${col}`}>
+              {_.get(row, col)}
+            </td>,
+          )}
+        </tr>,
+      )}
     </tbody>
-  </table>
-);
+  </table>;
 
-const App = () => (
-  <h1>Table w/ React & Recompose</h1>
-);
+const cols = [
+  'name',
+  'address.city',
+  'address.country',
+  'company',
+  'return_date',
+  'return_amount'
+];
+
+const App = () =>
+  <div>
+    <h1>Table w/ React & Recompose</h1>
+    <Table data={response.data} cols={cols} />
+  </div>;
 
 export default App;
