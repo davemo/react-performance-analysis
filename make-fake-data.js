@@ -22,4 +22,4 @@ const data = [...Array(SIZE).keys()].map(x => {
   }
 });
 
-fs.writeFileSync('./data.json', JSON.stringify({data}, null, 2));
+fs.writeFileSync('./src/data.json', JSON.stringify({data}, null, 2));
