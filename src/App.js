@@ -7,35 +7,39 @@ import { compose, withState, withHandlers } from 'recompose';
 const withSorting = compose(
   withState('sortBy', 'updateSort', ''),
   withState('sortOrder', 'updateSortOrder', ''),
+  withState('sortedData', 'updateSortData', []),
   withHandlers({
-    toggleSortOrder: ({ sortOrder, updateSortOrder }) => event => {
-      updateSortOrder(sortOrder === '' || sortOrder === 'DESC' ? 'ASC' : 'DESC');
+    doSort: ({ data, sortOrder, updateSort, updateSortOrder, updateSortData }) => col => {
+      updateSort(col);
+      updateSortOrder(sortOrder === '' || sortOrder === 'desc' ? 'asc' : 'desc');
+      updateSortData(_.orderBy(data, col, sortOrder));
     },
-    resetSort: ({ updateSort, updateSortOrder }) => event => {
-      updateSort('')
-      updateSortOrder('')
+    resetSort: ({ updateSort, updateSortOrder, updateSortData }) => event => {
+      updateSort('');
+      updateSortOrder('');
+      updateSortData([]);
     },
   }),
 );
 
-const Table = ({ data, cols, sortBy, updateSort, toggleSortOrder, resetSort }) =>
+const Table = ({ data, cols, sortBy, sortedData, doSort, toggleSortOrder, resetSort }) =>
   <table>
-    {sortBy &&
-      <thead>
-        <tr>
-          <th>
-            <button onClick={resetSort}>Reset Sort</button>
-          </th>
-        </tr>
-      </thead>}
+    {sortBy
+      ? <thead>
+          <tr>
+            <th>
+              <button onClick={resetSort}>Reset Sort</button>
+            </th>
+          </tr>
+        </thead>
+      : null}
     <thead>
       <tr>
         {cols.map(col =>
           <th
             key={col}
             onClick={() => {
-              updateSort(col);
-              toggleSortOrder();
+              doSort(col);
             }}
           >
             {col}
@@ -44,7 +48,7 @@ const Table = ({ data, cols, sortBy, updateSort, toggleSortOrder, resetSort }) =
       </tr>
     </thead>
     <tbody>
-      {data.map(row =>
+      {(sortedData.length ? sortedData : data).map(row =>
         <tr key={row.id}>
           {cols.map(col =>
             <td key={`${row.id}-${col}`}>
