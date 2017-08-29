@@ -6,6 +6,8 @@ React is frequently touted as being performant due to the optimizations of its V
 
 This screencast covers a number of techniques for constructing components, but also shows how to evaluate performance objectively and make informed refactoring decisions.
 
+https://www.youtube.com/watch?v=sVDnCMIkmTM
+
 ## Outline
 
 1. Introduction
